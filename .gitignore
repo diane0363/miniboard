@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# 비밀 설정 — 환경별 파일 전부 차단 (단, 예시 파일은 예외)
+application-secret.yml
+application-*-secret.yml

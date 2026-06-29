@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!-- ★ security 네임스페이스 추가 -->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>게시판</title>
+</head>
+
+<body>
+
+    <!-- ★ 로그인 상태 표시 영역 -->
+    <div style="text-align: right; margin-bottom: 10px;">
+
+        <!-- 로그인했을 때만 보임 -->
+        <span sec:authorize="isAuthenticated()">
+            <strong sec:authentication="principal.nickname">사용자</strong>님 환영합니다.
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit">로그아웃</button>
+            </form>
+        </span>
+
+        <!-- 비로그인일 때만 보임 -->
+        <span sec:authorize="!isAuthenticated()">
+            <a th:href="@{/login}"><button type="button">로그인</button></a>
+        </span>
+
+    </div>
+
+    <h1>게시판</h1>
+    <a th:href="@{/posts/new}">글쓰기</a>
+
+    <!-- ... 이하 테이블·페이징은 기존 그대로 ... -->
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="post : ${posts.content}">
+                <td th:text="${post.id}"></td>
+                <td><a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a></td>
+                <td th:text="${post.authorNickname}"></td>
+                <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+            </tr>
+            <tr th:if="${posts.isEmpty()}">
+                <td colspan="4">등록된 게시글이 없습니다.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 페이징 (★ totalPages > 0 가드 필수 — 아래 deep-dive ⑥) -->
+    <div th:if="${posts.totalPages > 0}">
+        <a th:if="${posts.hasPrevious()}" th:href="@{/posts(page=${posts.number - 1})}">이전</a>
+        <span th:each="i : ${#numbers.sequence(0, posts.totalPages - 1)}">
+            <a th:href="@{/posts(page=${i})}" th:text="${i + 1}"
+                th:style="${i == posts.number} ? 'font-weight:bold' : ''"></a>
+        </span>
+        <a th:if="${posts.hasNext()}" th:href="@{/posts(page=${posts.number + 1})}">다음</a>
+    </div>
+</body>
+
+</html>

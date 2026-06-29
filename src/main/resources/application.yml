@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: dev
+  config:
+    import: optional:application-secret.yml   # ★ secret 파일을 끌어온다
   application:
     name: miniboard
   mvc:

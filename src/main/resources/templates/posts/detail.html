@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${post.title}"></title>
+    <!-- ★ AJAX DELETE용 CSRF 토큰 (deep-dive ⑧) -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+
+<body>
+    <h1 th:text="${post.title}"></h1>
+    <p>작성자: <span th:text="${post.authorNickname}"></span></p>
+    <p th:text="${post.content}" style="white-space: pre-wrap;"></p>
+
+    <a th:href="@{/posts}">목록</a>
+
+    <!-- ★ 본인 글일 때만 노출 (화장). 실제 차단은 서버 OWNCHK -->
+    <span th:if="${isOwner}">
+        <a th:href="@{/posts/{id}/edit(id=${post.id})}">수정</a>
+        <button type="button" id="deleteBtn" th:data-id="${post.id}">삭제</button>
+    </span>
+
+    <script th:inline="javascript">
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+        $("#deleteBtn").on("click", function () {
+            if (!confirm("정말 삭제하시겠습니까?")) return;
+            const postId = $(this).data("id");
+            $.ajax({
+                url: "/posts/" + postId,
+                type: "DELETE",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);   // ★ CSRF 헤더 수동 첨부
+                },
+                success: function () {
+                    alert("삭제되었습니다.");
+                    window.location.href = "/posts";
+                },
+                error: function (xhr) {
+                    if (xhr.status === 403) alert("본인 글만 삭제할 수 있습니다.");
+                    else alert("삭제 중 오류가 발생했습니다.");
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

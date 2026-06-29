@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/miniboard?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
-    password: ${DB_PASSWORD}          # 코드에 평문 박지 마라 (5단계)
+    # password: ${DB_PASSWORD}          # 코드에 평문 박지 마라 (5단계) # 환경변수 방식
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:

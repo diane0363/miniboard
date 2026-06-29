@@ -18,5 +18,12 @@ com.example.miniboard
 ├── dto
 │   └── SignupRequest.java
 └── resources/templates/auth
-    ├── signup.html
-    └── login.html
+│   ├── signup.html
+│   └── login.html
+
+
+
+src/main/resources/
+├── application.yml            ← 공통 (커밋 O)
+├── application-dev.yml        ← 로컬 개발 (커밋 O, 단 비밀 없어야)
+└── application-secret.yml     ← 비밀 (커밋 X, gitignore)    
