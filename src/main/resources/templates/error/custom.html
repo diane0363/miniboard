@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<head>
+    <title>오류</title>
+</head>
+
+<body>
+    <main layout:fragment="content">
+        <div style="text-align: center; padding: 40px;">
+            <h1 th:text="${status}">오류</h1>
+            <p th:text="${message}">문제가 발생했습니다.</p>
+            <a th:href="@{/posts}">게시판으로 돌아가기</a>
+        </div>
+    </main>
+</body>
+
+</html>

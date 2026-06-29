@@ -1,52 +1,54 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
 
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${post.title}"></title>
-    <!-- ★ AJAX DELETE용 CSRF 토큰 (deep-dive ⑧) -->
-    <meta name="_csrf" th:content="${_csrf.token}" />
-    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <title th:text="${post.title}">게시글</title>
+    <!-- ★ 이 페이지에만 필요한 jQuery — base의 head에 자동 병합된다 -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 
 <body>
-    <h1 th:text="${post.title}"></h1>
-    <p>작성자: <span th:text="${post.authorNickname}"></span></p>
-    <p th:text="${post.content}" style="white-space: pre-wrap;"></p>
+    <main layout:fragment="content" class="post-detail">
+        <h1 th:text="${post.title}"></h1>
 
-    <a th:href="@{/posts}">목록</a>
+        <!-- 작성자·날짜를 메타 영역으로 -->
+        <div class="post-meta">
+            작성자 <span th:text="${post.authorNickname}"></span>
+        </div>
 
-    <!-- ★ 본인 글일 때만 노출 (화장). 실제 차단은 서버 OWNCHK -->
-    <span th:if="${isOwner}">
-        <a th:href="@{/posts/{id}/edit(id=${post.id})}">수정</a>
-        <button type="button" id="deleteBtn" th:data-id="${post.id}">삭제</button>
-    </span>
+        <!-- 본문 -->
+        <div class="post-content" th:text="${post.content}"></div>
 
-    <script th:inline="javascript">
-        const csrfToken = $("meta[name='_csrf']").attr("content");
-        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        <!-- 하단 액션 버튼들 -->
+        <div class="post-actions">
+            <a th:href="@{/posts}" class="btn">목록</a>
+            <span th:if="${isOwner}" style="display:flex; gap:8px;">
+                <a th:href="@{/posts/{id}/edit(id=${post.id})}" class="btn">수정</a>
+                <button type="button" id="deleteBtn" th:data-id="${post.id}" class="btn-danger">삭제</button>
+            </span>
+        </div>
 
-        $("#deleteBtn").on("click", function () {
-            if (!confirm("정말 삭제하시겠습니까?")) return;
-            const postId = $(this).data("id");
-            $.ajax({
-                url: "/posts/" + postId,
-                type: "DELETE",
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader(csrfHeader, csrfToken);   // ★ CSRF 헤더 수동 첨부
-                },
-                success: function () {
-                    alert("삭제되었습니다.");
-                    window.location.href = "/posts";
-                },
-                error: function (xhr) {
-                    if (xhr.status === 403) alert("본인 글만 삭제할 수 있습니다.");
-                    else alert("삭제 중 오류가 발생했습니다.");
-                }
+        <script th:inline="javascript">
+            // CSRF 토큰은 base의 head meta에서 읽는다 (공통화된 것 재사용)
+            const csrfToken = $("meta[name='_csrf']").attr("content");
+            const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+            $("#deleteBtn").on("click", function () {
+                if (!confirm("정말 삭제하시겠습니까?")) return;
+                const postId = $(this).data("id");
+                $.ajax({
+                    url: "/posts/" + postId, type: "DELETE",
+                    beforeSend: function (xhr) { xhr.setRequestHeader(csrfHeader, csrfToken); },
+                    success: function () { alert("삭제되었습니다."); window.location.href = "/posts"; },
+                    error: function (xhr) {
+                        if (xhr.status === 403) alert("본인 글만 삭제할 수 있습니다.");
+                        else alert("삭제 중 오류가 발생했습니다.");
+                    }
+                });
             });
-        });
-    </script>
+        </script>
+    </main>
 </body>
 
 </html>

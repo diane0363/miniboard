@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
 
 <head>
     <meta charset="UTF-8">
@@ -7,14 +8,16 @@
 </head>
 
 <body>
-    <h1>로그인</h1>
-    <div th:if="${param.error}" style="color:red">아이디 또는 비밀번호가 올바르지 않습니다.</div>
-    <form th:action="@{/login}" method="post">
-        <input type="text" name="username" placeholder="아이디">
-        <input type="password" name="password" placeholder="비밀번호">
-        <button type="submit">로그인</button>
-    </form>
-    <a th:href="@{/signup}">회원가입</a>
+    <main layout:fragment="content">
+        <h1>로그인</h1>
+        <div th:if="${param.error}" style="color:red">아이디 또는 비밀번호가 올바르지 않습니다.</div>
+        <form th:action="@{/login}" method="post">
+            <input type="text" name="username" placeholder="아이디">
+            <input type="password" name="password" placeholder="비밀번호">
+            <button type="submit">로그인</button>
+        </form>
+        <a th:href="@{/signup}">회원가입</a>
+    </main>
 </body>
 
 </html>

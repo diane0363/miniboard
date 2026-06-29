@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}"> <!-- ★ base를 입겠다 -->
 
 <head>
     <meta charset="UTF-8">
@@ -7,25 +8,27 @@
 </head>
 
 <body>
-    <h1 th:text="${postId} != null ? '글 수정' : '글 작성'"></h1>
+    <main layout:fragment="content">
+        <h1 th:text="${postId} != null ? '글 수정' : '글 작성'"></h1>
 
-    <!-- 수정이면 /posts/{id}로, 작성이면 /posts로 -->
-    <form th:action="${postId} != null ? @{/posts/{id}(id=${postId})} : @{/posts}" th:object="${postRequest}"
-        method="post">
+        <!-- 수정이면 /posts/{id}로, 작성이면 /posts로 -->
+        <form th:action="${postId} != null ? @{/posts/{id}(id=${postId})} : @{/posts}" th:object="${postRequest}"
+            method="post">
 
-        <!-- ★ 수정 모드일 때만 PUT 우회 hidden 필드 (deep-dive ⑦) -->
-        <input type="hidden" th:if="${postId != null}" name="_method" value="put" />
+            <!-- ★ 수정 모드일 때만 PUT 우회 hidden 필드 (deep-dive ⑦) -->
+            <input type="hidden" th:if="${postId != null}" name="_method" value="put" />
 
-        <div>
-            <input type="text" th:field="*{title}" placeholder="제목">
-            <span th:errors="*{title}" style="color:red"></span>
-        </div>
-        <div>
-            <textarea th:field="*{content}" rows="10" placeholder="내용"></textarea>
-            <span th:errors="*{content}" style="color:red"></span>
-        </div>
-        <button type="submit">저장</button>
-    </form>
+            <div>
+                <input type="text" th:field="*{title}" placeholder="제목">
+                <span th:errors="*{title}" style="color:red"></span>
+            </div>
+            <div>
+                <textarea th:field="*{content}" rows="10" placeholder="내용"></textarea>
+                <span th:errors="*{content}" style="color:red"></span>
+            </div>
+            <button type="submit">저장</button>
+        </form>
+    </main>
 </body>
 
 </html>

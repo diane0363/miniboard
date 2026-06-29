@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- ★ 각 페이지 제목 + 공통 사이트명 합성 -->
+    <title layout:title-pattern="$CONTENT_TITLE | 미니게시판">미니게시판</title>
+
+    <!-- ★ CSRF 토큰 (모든 페이지가 공유 — AJAX용) -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+    <!-- CSS는 다음 단계에서 만든다. 지금은 링크만 걸어둠(없으면 무시됨) -->
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+
+<body>
+
+    <!-- ★ 공통 헤더 — 로그인 상태 표시 (이제 모든 페이지에 자동으로!) -->
+    <header>
+        <div style="text-align: right;">
+            <span sec:authorize="isAuthenticated()">
+                <strong sec:authentication="principal.nickname">사용자</strong>님 환영합니다.
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit">로그아웃</button>
+                </form>
+            </span>
+            <span sec:authorize="!isAuthenticated()">
+                <a th:href="@{/login}"><button type="button">로그인</button></a>
+            </span>
+        </div>
+        <hr />
+    </header>
+
+    <!-- ★ 각 페이지의 본문이 여기로 끼워진다 -->
+    <main layout:fragment="content">
+        <p>여기에 페이지 내용이 들어옵니다.</p>
+    </main>
+
+    <!-- 공통 푸터 -->
+    <footer>
+        <hr />
+        <p style="text-align:center; color:gray;">© 2026 미니게시판 학습 프로젝트</p>
+    </footer>
+
+</body>
+
+</html>
