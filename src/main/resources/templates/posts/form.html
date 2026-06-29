@@ -26,7 +26,9 @@
                 <textarea th:field="*{content}" rows="10" placeholder="내용"></textarea>
                 <span th:errors="*{content}" style="color:red"></span>
             </div>
-            <button type="submit">저장</button>
+            <div class="form-actions">
+                <button type="submit">저장</button>
+            </div>
         </form>
     </main>
 </body>

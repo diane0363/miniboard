@@ -23,7 +23,9 @@
                 <input type="text" th:field="*{nickname}" placeholder="닉네임">
                 <span th:errors="*{nickname}" style="color:red"></span>
             </div>
-            <button type="submit">가입하기</button>
+            <div class="form-actions">
+                <button type="submit">가입하기</button>
+            </div>
         </form>
     </main>
 </body>

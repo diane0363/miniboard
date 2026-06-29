@@ -118,6 +118,8 @@ textarea:focus {
     border-color: #3b82f6;
 }
 
+
+
 /* 에러 메시지 */
 span[style*="color:red"],
 span[style*="color: red"] {
@@ -219,6 +221,7 @@ main>div:last-child a {
 
 .post-actions {
     display: flex;
+    justify-content: flex-end;
     gap: 8px;
     align-items: center;
     padding-top: 20px;
@@ -232,4 +235,25 @@ main>div:last-child a {
 
 .btn-danger:hover {
     background-color: #dc2626;
+}
+
+/* ===== 폼 하단 버튼 영역 (오른쪽 정렬) ===== */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    /* ★ 오른쪽 끝으로 */
+    gap: 8px;
+    /* 버튼 사이 간격 */
+    margin-top: 16px;
+}
+
+/* 보조 버튼 (회원가입 등) — 채움 대신 테두리만 */
+.btn-secondary {
+    background-color: transparent;
+    color: #3b82f6 !important;
+    border: 1px solid #3b82f6;
+}
+
+.btn-secondary:hover {
+    background-color: #eff6ff;
 }
