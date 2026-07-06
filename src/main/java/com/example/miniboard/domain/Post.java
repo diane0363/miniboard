@@ -32,7 +32,7 @@ public class Post extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) // ★ 반드시 LAZY (N+1 방지의 시작)
+    @ManyToOne(fetch = FetchType.LAZY) // ★ 반드시 LAZY -> 추후 N+1 방지를 위해 fetch join 사용
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

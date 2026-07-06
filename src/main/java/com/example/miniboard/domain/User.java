@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
 
+    // bigint -> Long
+    // int -> int
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
