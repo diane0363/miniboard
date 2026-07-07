@@ -1,18 +1,32 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
-    <!-- ★ 각 페이지 제목 + 공통 사이트명 합성 -->
-    <title layout:title-pattern="$CONTENT_TITLE | 미니게시판">미니게시판</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- ★ CSRF 토큰 (모든 페이지가 공유 — AJAX용) -->
-    <meta name="_csrf" th:content="${_csrf.token}" />
-    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <!-- ★ CSRF 토큰 : 모든 AJAX가 읽어갈 공통 소스 -->
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
 
-    <!-- CSS는 다음 단계에서 만든다. 지금은 링크만 걸어둠(없으면 무시됨) -->
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <!-- ★ jQuery : 공통으로 한 번만. 하위 페이지는 중복 로드 금지 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- ★ 전역 CSRF 자동 첨부 : 이 사이트의 '모든' AJAX에 토큰이 자동으로 실린다 -->
+    <script>
+        $(function () {
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+            if (token && header) {
+                $(document).ajaxSend(function (e, xhr) {
+                    xhr.setRequestHeader(header, token);
+                });
+            }
+        });
+    </script>
+
+    <title layout:title-pattern="$CONTENT_TITLE">MiniBoard</title>
+    <!-- 하위 페이지가 추가 <head> 요소를 병합할 자리 -->
 </head>
 
 <body>

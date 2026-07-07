@@ -1,26 +1,24 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{layout/base}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}">
 
 <head>
     <title th:text="${post.title}">게시글</title>
-    <!-- ★ 이 페이지에만 필요한 jQuery — base의 head에 자동 병합된다 -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- ★ jQuery는 base에 있으니 여기서 다시 안 넣는다 -->
+    <!-- ★ 댓글 로직은 외부 파일로. defer로 DOM 준비 후 실행 -->
+    <script src="/js/comment.js" defer></script>
 </head>
 
 <body>
     <main layout:fragment="content" class="post-detail">
         <h1 th:text="${post.title}"></h1>
 
-        <!-- 작성자·날짜를 메타 영역으로 -->
         <div class="post-meta">
             작성자 <span th:text="${post.authorNickname}"></span>
         </div>
 
-        <!-- 본문 -->
         <div class="post-content" th:text="${post.content}"></div>
 
-        <!-- 하단 액션 버튼들 -->
         <div class="post-actions">
             <a th:href="@{/posts}" class="btn">목록</a>
             <span th:if="${isOwner}" style="display:flex; gap:8px;">
@@ -29,22 +27,41 @@
             </span>
         </div>
 
-        <script th:inline="javascript">
-            // CSRF 토큰은 base의 head meta에서 읽는다 (공통화된 것 재사용)
-            const csrfToken = $("meta[name='_csrf']").attr("content");
-            const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        <!-- ══════════ 댓글 영역 ══════════ -->
+        <section id="comment-section">
+            <h3>댓글 <span id="comment-count" th:text="${#lists.size(comments)}">0</span></h3>
 
-            $("#deleteBtn").on("click", function () {
-                if (!confirm("정말 삭제하시겠습니까?")) return;
-                const postId = $(this).data("id");
-                $.ajax({
-                    url: "/posts/" + postId, type: "DELETE",
-                    beforeSend: function (xhr) { xhr.setRequestHeader(csrfHeader, csrfToken); },
-                    success: function () { alert("삭제되었습니다."); window.location.href = "/posts"; },
-                    error: function (xhr) {
-                        if (xhr.status === 403) alert("본인 글만 삭제할 수 있습니다.");
-                        else alert("삭제 중 오류가 발생했습니다.");
-                    }
+            <!-- 초기 로딩: AJAX와 같은 fragment 공유 (DRY) -->
+            <div id="comment-list">
+                <div th:each="comment : ${comments}" th:replace="~{fragments/comment :: commentItem}"></div>
+            </div>
+
+            <!-- ★ 원댓글 입력창 : sec:authorize로 '진짜 로그인'만 노출 (anonymousUser 함정 회피) -->
+            <div id="comment-write" sec:authorize="isAuthenticated()">
+                <textarea id="new-comment-content" maxlength="1000" placeholder="댓글을 입력하세요"></textarea>
+                <button type="button" id="btn-submit-comment" th:data-post-id="${post.id}">등록</button>
+            </div>
+        </section>
+
+        <!-- ★ 게시글 삭제만 이 페이지 고유 로직. CSRF는 base 전역이 처리하므로 beforeSend 불필요 -->
+        <script th:inline="javascript">
+            $(function () {
+                $("#deleteBtn").on("click", function () {
+                    if (!confirm("정말 삭제하시겠습니까?")) return;
+                    const postId = $(this).data("id");
+                    $.ajax({
+                        url: "/posts/" + postId,
+                        type: "DELETE"
+                        // beforeSend 없음 → base의 전역 ajaxSend가 CSRF 자동 첨부
+                    })
+                        .done(function () {
+                            alert("삭제되었습니다.");
+                            window.location.href = "/posts";
+                        })
+                        .fail(function (xhr) {
+                            if (xhr.status === 403) alert("본인 글만 삭제할 수 있습니다.");
+                            else alert("삭제 중 오류가 발생했습니다.");
+                        });
                 });
             });
         </script>
