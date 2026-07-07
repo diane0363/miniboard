@@ -33,7 +33,9 @@
 
             <!-- 초기 로딩: AJAX와 같은 fragment 공유 (DRY) -->
             <div id="comment-list">
-                <div th:each="comment : ${comments}" th:replace="~{fragments/comment :: commentItem}"></div>
+                <th:block th:each="comment : ${comments}">
+                    <div th:replace="~{fragments/comment :: commentItem(${comment})}"></div>
+                </th:block>
             </div>
 
             <!-- ★ 원댓글 입력창 : sec:authorize로 '진짜 로그인'만 노출 (anonymousUser 함정 회피) -->

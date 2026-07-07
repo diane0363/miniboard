@@ -257,3 +257,129 @@ main>div:last-child a {
 .btn-secondary:hover {
     background-color: #eff6ff;
 }
+
+/* ===== 댓글 섹션 ===== */
+#comment-section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #eaeaea;
+}
+
+#comment-section h3 {
+    font-size: 18px;
+    color: #222;
+    margin-bottom: 16px;
+}
+
+#comment-count {
+    color: #3b82f6;
+}
+
+#comment-list {
+    margin-bottom: 24px;
+}
+
+/* 개별 댓글 */
+.comment-item {
+    padding: 14px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.comment-author {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    margin-right: 8px;
+}
+
+.comment-date {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.comment-content {
+    font-size: 15px;
+    color: #333;
+    margin: 6px 0 8px;
+    white-space: pre-wrap;
+    /* 줄바꿈 유지 (본문과 동일 정책) */
+}
+
+/* 삭제된 댓글 (플레이스홀더) */
+.comment-deleted {
+    display: inline-block;
+    padding: 6px 0;
+    font-size: 14px;
+    font-style: italic;
+    color: #bbb;
+}
+
+/* ★ 댓글 액션 버튼 : 전역 파란 button {} 덮어쓰기 (클래스가 우선순위 높음) */
+.btn-reply,
+.btn-delete-comment {
+    background: none;
+    color: #888;
+    padding: 2px 8px;
+    font-size: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 4px;
+}
+
+.btn-reply:hover {
+    background-color: #f5f6f8;
+    color: #555;
+}
+
+/* 삭제는 위험 동작이라 hover 시 붉게 */
+.btn-delete-comment:hover {
+    color: #ef4444;
+    border-color: #ef4444;
+    background-color: #fef2f2;
+}
+
+/* ===== 대댓글 (1-depth 들여쓰기 + 스레드 라인) ===== */
+.replies {
+    margin: 10px 0 0 24px;
+    padding-left: 16px;
+    border-left: 2px solid #eef0f2;
+}
+
+.reply-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.reply-item:last-child {
+    border-bottom: none;
+}
+
+/* ===== 답글 입력창 ===== */
+.reply-form {
+    margin: 8px 0 8px 24px;
+}
+
+.reply-form .reply-content {
+    min-height: 60px;
+}
+
+.btn-submit-reply {
+    padding: 6px 14px;
+    font-size: 13px;
+}
+
+/* ===== 원댓글 입력창 ===== */
+#comment-write {
+    margin-top: 8px;
+}
+
+#comment-write textarea {
+    min-height: 70px;
+}
+
+#btn-submit-comment {
+    display: block;
+    margin-left: auto;
+    /* 오른쪽 정렬 */
+    margin-top: 4px;
+}

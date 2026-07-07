@@ -1,11 +1,12 @@
 <!-- templates/fragments/comment.html -->
 <!DOCTYPE html>
-<html xmlns:th="<http://www.thymeleaf.org>">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body>
 
     <!-- ★ 댓글 1개(+ 대댓글들)를 그리는 조각. Controller와 초기로딩이 공유 -->
-    <div th:fragment="commentItem" th:id="'comment-' + ${comment.id}" class="comment-item"
+    <!-- 파라미터 (comment) 를 명시적으로 선언 -->
+    <div th:fragment="commentItem(comment)" th:id="'comment-' + ${comment.id}" class="comment-item"
         th:data-comment-id="${comment.id}">
 
         <!-- ── 본체 ── -->
@@ -24,8 +25,8 @@
 
                 <!-- ★ [답글]·[삭제]는 로그인+본인일 때만 노출 (UX). 서버 검증은 별개로 무조건 돈다 -->
                 <button type="button" class="btn-reply" th:data-comment-id="${comment.id}">답글</button>
-                <button type="button" class="btn-delete-comment"
-                    th:if="${#authentication.principal.id == comment.authorId}"
+                <button type="button" class="btn-delete-comment" sec:authorize="isAuthenticated()"
+                    th:if="${#authentication.principal.userId == comment.authorId}"
                     th:data-comment-id="${comment.id}">삭제</button>
             </th:block>
         </div>
@@ -44,8 +45,8 @@
                 <span class="comment-author" th:text="${reply.authorNickname}">닉네임</span>
                 <p class="comment-content" th:text="${reply.content}">내용</p>
                 <span class="comment-date" th:text="${#temporals.format(reply.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</span>
-                <button type="button" class="btn-delete-comment"
-                    th:if="${#authentication.principal.id == reply.authorId}"
+                <button type="button" class="btn-delete-comment" sec:authorize="isAuthenticated()"
+                    th:if="${#authentication.principal.userId == reply.authorId}"
                     th:data-comment-id="${reply.id}">삭제</button>
             </div>
         </div>

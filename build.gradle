@@ -45,6 +45,9 @@ tasks.named('test') {
 
 // 아래로는 계속 오류가 떠서 
 // @PathVariable Long id -> @PathVariable("id") Long id로 일괄 변경
+// 여전히 안 먹힘 이슈 -> 위와 같은 방식으로 postId, commentId 변경
 tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs << '-parameters'
+    // options.compilerArgs << '-parameters'
+	options.compilerArgs.add('-parameters')
 }
+

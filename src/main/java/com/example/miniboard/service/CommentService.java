@@ -99,6 +99,17 @@ public class CommentService {
     }
 
     /**
+     * 단건 댓글 조회 (컨트롤러에서 삭제된 플레이스홀더를 다시 조회할 때 사용)
+     */
+    @Transactional(readOnly = true)
+    public CommentResponse getComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+
+        return CommentResponse.from(comment);
+    }
+
+    /**
      * 상세 페이지용: 한 글의 댓글 트리를 조립해서 반환.
      * - 삭제된 것도 일단 다 긁은 뒤, 여기서 "제외 / 플레이스홀더" 판정.
      */

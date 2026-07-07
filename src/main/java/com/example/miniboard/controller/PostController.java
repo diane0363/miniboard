@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.miniboard.dto.PostRequest;
 import com.example.miniboard.dto.PostResponse;
 import com.example.miniboard.security.CustomUserDetails;
+import com.example.miniboard.service.CommentService;
 import com.example.miniboard.service.PostService;
 
 import jakarta.validation.Valid;
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class PostController {
 
     private final PostService postService;
+    private final CommentService commentService;
 
     @GetMapping
     public String list(
@@ -48,6 +50,10 @@ public class PostController {
         Long loginUserId = (userDetails != null) ? userDetails.getUserId() : null;
         model.addAttribute("post", post);
         model.addAttribute("isOwner", post.getAuthorId().equals(loginUserId)); // 버튼 노출용(화장)
+
+        // ★ 추가: 이 글의 댓글 트리를 조회해 Model에 싣는다
+        model.addAttribute("comments", commentService.getCommentTree(id));
+
         return "posts/detail";
     }
 
@@ -103,4 +109,5 @@ public class PostController {
         postService.deletePost(id, userDetails.getUserId());
         return ResponseEntity.noContent().build(); // 204 No Content
     }
+
 }

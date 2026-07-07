@@ -15,9 +15,10 @@ import lombok.Setter;
 public class CommentResponse {
 
     private Long id;
+    private Long postId;
     private Long parentId;
     private String authorNickname;
-    private Long authorId; // 화면에서 "본인 댓글이면 삭제버튼 노출" 판단용 (UX)
+    private Long authorId; // 화면에서 "본인 댓글이면 삭제버튼 노출" 판단용 (UX) (user_id)
     private String content;
     private boolean deleted; // true면 뷰에서 "삭제된 댓글입니다" 렌더 (플레이스홀더)
     private LocalDateTime createdAt;
@@ -26,6 +27,7 @@ public class CommentResponse {
     public static CommentResponse from(Comment c) {
         CommentResponse dto = new CommentResponse();
         dto.id = c.getId();
+        dto.postId = c.getPost().getId(); // Comment 엔티티에서 Post의 ID를 꺼내서 매핑
         dto.parentId = c.getParentId(); // 프록시 로딩 없이 FK만 (6-1)
         dto.authorNickname = c.getAuthor().getNickname(); // author는 JOIN FETCH돼서 안전
         dto.authorId = c.getAuthor().getId();
